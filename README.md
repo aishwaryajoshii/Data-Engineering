@@ -19,6 +19,52 @@ This project reflects my belief that even small-scale data engineering solutions
 
 
 # Reddit News Project Description
-Throughout my undergrad I was obssessed with going through sub reddits, I'm still a news junkie. One of my favorite places to get news is Reddit, due to the intuitive aggregation and interactive comments sections.
+Reddit News ETL Pipeline using Reddit API and Google BigQuery
+This project automates the extraction, transformation, and loading (ETL) of trending news posts from multiple Reddit subreddits into Google BigQuery for centralized storage and analysis.
 
-While the original build for the Reddit connection was straightforward, it was one of the first ETL pipelines I built as a side project last year after deep diving into this topic more . I recently revisited the pipeline and refactored it according to best coding practices.
+🔧 Tech Stack & Tools Used
+Python for scripting and orchestration
+
+Reddit API with OAuth2 authentication for data access
+
+Pandas for data transformation
+
+Google BigQuery for cloud-based data warehousing
+
+Google Cloud Storage & google-auth for authentication and credentials management
+
+Logging module for traceability and job tracking
+
+Config file (news_config.py) to abstract secrets, endpoints, and schemas
+
+🧩 Pipeline Breakdown
+Authentication:
+
+OAuth2 token is generated via Reddit API using client credentials stored in news_config.py.
+
+Data Extraction:
+
+Pulls the top 100 posts from several subreddits (e.g., r/news, r/nottheonion, r/upliftingnews, etc.).
+
+Fetches post metadata such as title, score, upvote_ratio, num_comments, and domain.
+
+Transformation:
+
+Standardizes all subreddit responses into clean Pandas DataFrames.
+
+Adds a dt_updated timestamp column for tracking update time.
+
+Loading to BigQuery:
+
+Before new loads, deletes records from the current date to ensure clean appends.
+
+Loads all subreddit-specific DataFrames into their respective BigQuery tables using an explicit schema.
+
+🚀 Key Features
+Designed to be modular and scalable, supporting easy addition of new subreddits.
+
+Uses WRITE_APPEND for continuous historical data storage while maintaining freshness by clearing daily records before reload.
+
+Implements robust logging for transparency in data ingestion and debugging.
+
+Maintains clean data separation across multiple tables, one for each subreddit.
